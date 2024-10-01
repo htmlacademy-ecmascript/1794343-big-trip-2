@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Anna Korobkova](https://up.htmlacademy.ru/ecmascript-individual/2/user/1794343).
-* Наставник: `Неизвестно`.
+* Наставник: [Олег Глущенко](https://up.htmlacademy.ru/ecmascript-individual/2/user/305355).
 
 ---
 
