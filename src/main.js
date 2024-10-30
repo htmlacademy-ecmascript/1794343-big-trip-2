@@ -1,8 +1,8 @@
-import EventModel from './model/model';
-import Presenter from './presenter/presenter';
-import FiltersView from './view/filter-view';
-import TripInfoView from './view/trip-info-view';
-import { render, RenderPosition } from './render';
+import EventModel from './model/model.js';
+import Presenter from './presenter/presenter.js';
+import FiltersView from './view/filter-view.js';
+import TripInfoView from './view/trip-info-view.js';
+import { render, RenderPosition } from './framework/render.js';
 
 const siteHeaderElement = document.querySelector('.trip-main');
 const siteFiltersElement = document.querySelector('.trip-controls__filters');

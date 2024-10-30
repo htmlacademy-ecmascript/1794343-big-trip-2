@@ -1,6 +1,6 @@
-import { createElement } from '../render';
-import { humanizeTaskDueDate, getTimeDuration} from '../utils';
-import { DateFormats } from '../const';
+import AbstractView from '../framework/view/abstract-view.js';
+import { humanizeTaskDueDate, getTimeDuration} from '../utils.js';
+import { DateFormats } from '../const.js';
 
 const createWayPointTemplate = (point, destinations, offers) => {
   const {basePrice, dateFrom, dateTo, isFavorite, type} = point;
@@ -50,25 +50,15 @@ const createWayPointTemplate = (point, destinations, offers) => {
             </li>`
   );
 };
-export default class WayPointView {
+export default class WayPointView extends AbstractView {
   constructor(point, destinations, offers) {
+    super();
     this.point = point;
     this.destinations = destinations;
     this.offers = offers;
   }
 
-  getTemplate() {
+  get template() {
     return createWayPointTemplate(this.point, this.destinations, this.offers);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

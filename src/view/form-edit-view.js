@@ -1,6 +1,6 @@
-import { createElement } from '../render';
-import { POINT_TYPES, DateFormats } from '../const';
-import { makeFirstCharBig, humanizeTaskDueDate } from '../utils';
+import AbstractView from '../framework/view/abstract-view.js';
+import { POINT_TYPES, DateFormats } from '../const.js';
+import { makeFirstCharBig, humanizeTaskDueDate } from '../utils.js';
 
 const createFormEditTemplate = (point, destinations, offers) => {
   const {basePrice, dateFrom, dateTo, type} = point;
@@ -100,25 +100,15 @@ const createFormEditTemplate = (point, destinations, offers) => {
                 </section>
               </form>`;
 };
-export default class FormEditView {
+export default class FormEditView extends AbstractView {
   constructor(point, destinations, offers) {
+    super();
     this.point = point;
     this.destinations = destinations;
     this.offers = offers;
   }
 
-  getTemplate() {
+  get template() {
     return createFormEditTemplate(this.point, this.destinations, this.offers);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }
