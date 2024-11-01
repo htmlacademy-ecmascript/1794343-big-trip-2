@@ -1,6 +1,6 @@
-import { createElement } from '../render';
-import { humanizeTaskDueDate, getTimeDuration} from '../utils';
-import { DateFormats } from '../const';
+import AbstractView from '../framework/view/abstract-view.js';
+import { humanizeTaskDueDate, getTimeDuration} from '../utils.js';
+import { DateFormat } from '../const.js';
 
 const createWayPointTemplate = (point, destinations, offers) => {
   const {basePrice, dateFrom, dateTo, isFavorite, type} = point;
@@ -10,16 +10,16 @@ const createWayPointTemplate = (point, destinations, offers) => {
 
   return (`<li class="trip-events__item">
               <div class="event">
-                <time class="event__date" datetime=${dateFrom}>${humanizeTaskDueDate(dateFrom, DateFormats.EVENT_DATE)}</time>
+                <time class="event__date" datetime=${dateFrom}>${humanizeTaskDueDate(dateFrom, DateFormat.EVENT_DATE)}</time>
                 <div class="event__type">
                   <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
                 </div>
                 <h3 class="event__title">${type} ${eventDestination.name}</h3>
                 <div class="event__schedule">
                   <p class="event__time">
-                    <time class="event__start-time" datetime=${dateFrom}>${humanizeTaskDueDate(dateFrom, DateFormats.EVENT_TIME)}</time>
+                    <time class="event__start-time" datetime=${dateFrom}>${humanizeTaskDueDate(dateFrom, DateFormat.EVENT_TIME)}</time>
                     &mdash;
-                    <time class="event__end-time" datetime=${dateTo}>${humanizeTaskDueDate(dateTo, DateFormats.EVENT_TIME)}</time>
+                    <time class="event__end-time" datetime=${dateTo}>${humanizeTaskDueDate(dateTo, DateFormat.EVENT_TIME)}</time>
                   </p>
                   <p class="event__duration">${getTimeDuration(dateFrom, dateTo)}</p>
                 </div>
@@ -50,25 +50,28 @@ const createWayPointTemplate = (point, destinations, offers) => {
             </li>`
   );
 };
-export default class WayPointView {
-  constructor(point, destinations, offers) {
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
+export default class WayPointView extends AbstractView {
+  #point = [];
+  #destinations = [];
+  #offers = [];
+  #handleRollupBtnClick = null;
+
+  constructor({point, destinations, offers, onRollupBtnClick}) {
+    super();
+    this.#point = point;
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#handleRollupBtnClick = onRollupBtnClick;
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#rollupBtnClickHandler);
   }
 
-  getTemplate() {
-    return createWayPointTemplate(this.point, this.destinations, this.offers);
+  get template() {
+    return createWayPointTemplate(this.#point, this.#destinations, this.#offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #rollupBtnClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleRollupBtnClick();
+  };
 }

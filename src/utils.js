@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { TimeConsts } from './const';
+import { TimeConst } from './const';
 
 dayjs.extend(duration);
 
@@ -15,10 +15,10 @@ function humanizeTaskDueDate(dueDate, dateFormat) {
 function getTimeDuration(start, end) {
   const minutesDuration = dayjs(end).diff(start, 'minute');
 
-  if (minutesDuration < TimeConsts.MINUTES_PER_HOUR) {
+  if (minutesDuration < TimeConst.MINUTES_PER_HOUR) {
     return dayjs.duration(minutesDuration, 'minutes').format('mm[M]');
   }
-  if (minutesDuration < TimeConsts.MINUTES_PER_DAY) {
+  if (minutesDuration < TimeConst.MINUTES_PER_DAY) {
     return dayjs.duration(minutesDuration, 'minutes').format('HH[H] mm[M]');
   }
   return dayjs.duration(minutesDuration, 'minutes').format('DD[D] HH[H] mm[M]');

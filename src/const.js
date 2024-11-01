@@ -1,12 +1,12 @@
 export const EVENTS_COUNT = 3;
 
-export const DateFormats = {
+export const DateFormat = {
   EVENT_DATE: 'MMM D',
   EVENT_TIME: 'HH:mm',
   NEW_EVENT: 'DD/MM/YY HH:mm'
 };
 
-export const TimeConsts = {
+export const TimeConst = {
   MINUTES_PER_HOUR: 60,
   MINUTES_PER_DAY: 3600
 };
