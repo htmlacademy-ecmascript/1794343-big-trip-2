@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { POINT_TYPES, DateFormats } from '../const.js';
+import { POINT_TYPES, DateFormat } from '../const.js';
 import { makeFirstCharBig, humanizeTaskDueDate } from '../utils.js';
 
 const createFormEditTemplate = (point, destinations, offers) => {
@@ -45,10 +45,10 @@ const createFormEditTemplate = (point, destinations, offers) => {
 
                   <div class="event__field-group  event__field-group--time">
                     <label class="visually-hidden" for="event-start-time-${pointId}">From</label>
-                    <input class="event__input  event__input--time" id="event-start-time-${pointId}" type="text" name="event-start-time" value="${humanizeTaskDueDate(dateFrom, DateFormats.NEW_EVENT)}">
+                    <input class="event__input  event__input--time" id="event-start-time-${pointId}" type="text" name="event-start-time" value="${humanizeTaskDueDate(dateFrom, DateFormat.NEW_EVENT)}">
                     &mdash;
                     <label class="visually-hidden" for="event-end-time-${pointId}">To</label>
-                    <input class="event__input  event__input--time" id="event-end-time-${pointId}" type="text" name="event-end-time" value="${humanizeTaskDueDate(dateTo, DateFormats.NEW_EVENT)}">
+                    <input class="event__input  event__input--time" id="event-end-time-${pointId}" type="text" name="event-end-time" value="${humanizeTaskDueDate(dateTo, DateFormat.NEW_EVENT)}">
                   </div>
 
                   <div class="event__field-group  event__field-group--price">
@@ -101,14 +101,27 @@ const createFormEditTemplate = (point, destinations, offers) => {
               </form>`;
 };
 export default class FormEditView extends AbstractView {
-  constructor(point, destinations, offers) {
+  #point = [];
+  #destinations = [];
+  #offers = [];
+  #handleFormSubmit = null;
+
+  constructor({point, destinations, offers, onFormSubmit}) {
     super();
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
+    this.#point = point;
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#handleFormSubmit = onFormSubmit;
+    this.element.querySelector('.event--edit')?.addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
   }
 
   get template() {
-    return createFormEditTemplate(this.point, this.destinations, this.offers);
+    return createFormEditTemplate(this.#point, this.#destinations, this.#offers);
   }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 }
