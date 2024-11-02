@@ -1,4 +1,4 @@
-import { getRandomArrayElement } from '../utils';
+import { getRandomArrayElement } from '../utils/common.js';
 
 const points = [
   {
@@ -43,12 +43,59 @@ const points = [
   {
     id: '4',
     basePrice: 600,
-    dateFrom: '2022-07-01T22:55:56.845Z',
-    dateTo: '2022-07-08T11:22:13.375Z',
+    dateFrom: '2026-07-01T22:55:56.845Z',
+    dateTo: '2026-07-08T11:22:13.375Z',
     destination: 'dfe416cq-10xa-ye10-8077-2fs9a01edcab',
     isFavorite: false,
     offers: [],
     type: 'drive'
+  },
+  {
+    id: '5',
+    basePrice: 780,
+    dateFrom: '2022-07-01T22:55:56.845Z',
+    dateTo: '2022-07-08T11:22:13.375Z',
+    destination: 'dfe416cq-10xa-ye10-8077-2fs9a01edcab',
+    isFavorite: false,
+    offers: [
+      'e4c3e4e6-9053-42ce-b747-e281314baa32',
+      'e4c3e4e6-9053-42ch-b747-e281314baa32'
+    ],
+    type: 'train'
+  },
+  {
+    id: '6',
+    basePrice: 455,
+    dateFrom: '2025-07-01T22:55:56.845Z',
+    dateTo: '2025-07-08T11:22:13.375Z',
+    destination: 'dfe416cq-10xa-ye10-8077-2fs9a01edcab',
+    isFavorite: true,
+    offers: [
+      'e4c3e4e6-9053-42ce-b747-e181314baa32'
+    ],
+    type: 'check-in'
+  },
+  {
+    id: '7',
+    basePrice: 906,
+    dateFrom: '2025-07-01T22:55:56.845Z',
+    dateTo: '2025-07-08T11:22:13.375Z',
+    destination: 'dfe416cq-10xa-ye10-8077-2fs9a01edcab',
+    isFavorite: false,
+    offers: [],
+    type: 'sightseeing'
+  },
+  {
+    id: '8',
+    basePrice: 1600,
+    dateFrom: new Date().toISOString(),
+    dateTo: new Date().toISOString(),
+    destination: 'dfe416cq-10xa-ye10-8077-2fs9a01edcab',
+    isFavorite: true,
+    offers: [
+      'e4c3e4e6-9053-42ce-b747-e281414baa32'
+    ],
+    type: 'restaurant'
   }
 ];
 

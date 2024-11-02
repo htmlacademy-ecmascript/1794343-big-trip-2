@@ -100,7 +100,7 @@ const offers = [
     ]
   },
   {
-    type: 'checkIn',
+    type: 'check-in',
     offers: [
       {
         id: 'e4c3e4e6-9053-42ce-b747-e181314baa32',

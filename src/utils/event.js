@@ -1,14 +1,10 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { TimeConst } from './const';
+import { TimeConst } from '../const';
 
 dayjs.extend(duration);
 
-function getRandomArrayElement(items) {
-  return items[Math.floor(Math.random() * items.length)];
-}
-
-function humanizeTaskDueDate(dueDate, dateFormat) {
+function humanizeEventDueDate(dueDate, dateFormat) {
   return dueDate ? dayjs(dueDate).format(dateFormat) : '';
 }
 
@@ -24,9 +20,16 @@ function getTimeDuration(start, end) {
   return dayjs.duration(minutesDuration, 'minutes').format('DD[D] HH[H] mm[M]');
 }
 
-function makeFirstCharBig(word) {
-  const bigFirstChar = word.charAt(0).toUpperCase();
-  return bigFirstChar + word.slice(1);
+function isEventToday(dueDate) {
+  return dueDate && dayjs(dueDate).isSame(dayjs(), 'D');
 }
 
-export {getRandomArrayElement, humanizeTaskDueDate, getTimeDuration, makeFirstCharBig};
+function isEventHappened(dueDate) {
+  return dueDate && dayjs().isAfter(dueDate, 'D');
+}
+
+function isEventBeInFuture(dueDate) {
+  return dueDate && dayjs().isBefore(dueDate, 'D');
+}
+
+export {humanizeEventDueDate, getTimeDuration, isEventToday, isEventHappened, isEventBeInFuture};

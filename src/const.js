@@ -1,4 +1,4 @@
-export const EVENTS_COUNT = 3;
+export const EVENTS_COUNT = 7;
 
 export const DateFormat = {
   EVENT_DATE: 'MMM D',
@@ -26,3 +26,17 @@ export const getDefaultPoint = () => (
     type: POINT_TYPES[5]
   }
 );
+
+export const FilterType = {
+  EVERYTHING: 'everything',
+  PAST: 'past',
+  PRESENT: 'present',
+  FUTURE: 'future'
+};
+
+export const MessageWithoutEvent = {
+  EVERYTHING: 'Click New Event to create your first point',
+  PAST: 'There are no past events now',
+  PRESENT: 'There are no present events now',
+  FUTURE: 'There are no future events now'
+};
