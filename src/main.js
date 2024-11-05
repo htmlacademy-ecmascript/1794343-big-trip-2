@@ -1,11 +1,9 @@
 import EventModel from './model/model.js';
-import Presenter from './presenter/presenter.js';
-import FiltersView from './view/filter-view.js';
-import TripInfoView from './view/trip-info-view.js';
+import Presenter from './presenter/main-presenter.js';
+import HeaderPresenter from './presenter/header-presenter.js';
 import NewEventBtnView from './view/new-event-btn-view.js';
 import FormEditView from './view/form-edit-view.js';
 import { render, remove, RenderPosition } from './framework/render.js';
-import { generateFilter } from './mock/filter.js';
 import { getDefaultPoint } from './const.js';
 
 const siteHeaderElement = document.querySelector('.trip-main');
@@ -20,7 +18,13 @@ const presenter = new Presenter({
   eventModel: eventModel});
 presenter.init();
 
-const filters = generateFilter(eventModel.points);
+const headerPresenter = new HeaderPresenter({
+  headerContainer: siteHeaderElement,
+  filtersContainer: siteFiltersElement,
+  eventModel: eventModel
+});
+headerPresenter.init();
+
 const formEditComponent = (new FormEditView({
   point: getDefaultPoint()
 }));
@@ -39,6 +43,6 @@ const newEventBtn = new NewEventBtnView({
   }
 });
 
-render(new TripInfoView(), siteHeaderElement, RenderPosition.AFTERBEGIN);
-render(new FiltersView({filters}), siteFiltersElement);
+//render(new TripInfoView(), siteHeaderElement, RenderPosition.AFTERBEGIN);
+//render(new FiltersView({filters}), siteFiltersElement);
 render(newEventBtn, siteHeaderElement);

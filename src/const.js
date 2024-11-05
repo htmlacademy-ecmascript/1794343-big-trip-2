@@ -1,4 +1,4 @@
-export const EVENTS_COUNT = 7;
+export const EVENTS_COUNT = 5;
 
 export const DateFormat = {
   EVENT_DATE: 'MMM D',
