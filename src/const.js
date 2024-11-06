@@ -40,3 +40,8 @@ export const MessageWithoutEvent = {
   PRESENT: 'There are no present events now',
   FUTURE: 'There are no future events now'
 };
+
+export const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};

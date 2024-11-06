@@ -3,13 +3,18 @@ import SortingView from '../view/soritng-view.js';
 import EmptyListView from '../view/empty-list-view.js';
 import { render } from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
+import { updateItem } from '../utils/common.js';
 
 export default class Presenter {
+  #points = [];
+  #destinations = [];
+  #offers = [];
   #container = null;
   #eventModel = null;
   #sortingComponent = new SortingView();
   #eventListComponent = new EventListView();
   #noEventsComponent = new EmptyListView();
+  #pointPresenters = new Map();
 
   constructor({container, eventModel}) {
     this.#container = container;
@@ -17,12 +22,22 @@ export default class Presenter {
   }
 
   init() {
-    const points = this.#eventModel.points;
-    const destinations = this.#eventModel.destinations;
-    const offers = this.#eventModel.offers;
+    this.#points = this.#eventModel.points;
+    this.#destinations = this.#eventModel.destinations;
+    this.#offers = this.#eventModel.offers;
 
-    this.#renderMainInfo(points, destinations, offers);
+    this.#renderMainInfo(this.#points, this.#destinations, this.#offers);
   }
+
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+
+  #handlePointChange = (updatedPoint) => {
+    this.#points = updateItem(this.#points, updatedPoint);
+    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint, this.#destinations, this.#offers);
+  };
 
   #renderSorting() {
     render(this.#sortingComponent, this.#container);
@@ -30,9 +45,12 @@ export default class Presenter {
 
   #renderPoint (point, destinations, offers) {
     const pointPresenter = new PointPresenter({
-      pointContainer: this.#eventListComponent.element
+      pointContainer: this.#eventListComponent.element,
+      onDataChange: this.#handlePointChange,
+      onModeChange: this.#handleModeChange
     });
     pointPresenter.init(point, destinations, offers);
+    this.#pointPresenters.set(point.id, pointPresenter);
   }
 
   #renderEventListItems (points, destinations, offers) {
@@ -43,6 +61,13 @@ export default class Presenter {
 
   #renderEventList () {
     render(this.#eventListComponent, this.#container);
+  }
+
+  #clearEventList() {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
+    //this.#renderedTaskCount = TASK_COUNT_PER_STEP;
+    //remove(this.#loadMoreButtonComponent);
   }
 
   #renderEmptyList (points) {

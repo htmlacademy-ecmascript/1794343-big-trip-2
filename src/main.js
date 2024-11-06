@@ -43,6 +43,4 @@ const newEventBtn = new NewEventBtnView({
   }
 });
 
-//render(new TripInfoView(), siteHeaderElement, RenderPosition.AFTERBEGIN);
-//render(new FiltersView({filters}), siteFiltersElement);
 render(newEventBtn, siteHeaderElement);
