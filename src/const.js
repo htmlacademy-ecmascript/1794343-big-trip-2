@@ -1,4 +1,4 @@
-export const EVENTS_COUNT = 7;
+export const EVENTS_COUNT = 5;
 
 export const DateFormat = {
   EVENT_DATE: 'MMM D',
@@ -39,4 +39,9 @@ export const MessageWithoutEvent = {
   PAST: 'There are no past events now',
   PRESENT: 'There are no present events now',
   FUTURE: 'There are no future events now'
+};
+
+export const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
 };

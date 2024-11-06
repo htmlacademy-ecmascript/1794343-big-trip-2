@@ -7,4 +7,8 @@ function makeFirstCharBig(word) {
   return bigFirstChar + word.slice(1);
 }
 
-export {getRandomArrayElement, makeFirstCharBig};
+function updateItem(items, update) {
+  return items.map((item) => item.id === update.id ? update : item);
+}
+
+export {getRandomArrayElement, makeFirstCharBig, updateItem};
