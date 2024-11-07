@@ -15,6 +15,8 @@ export const POINT_TYPES = [
   'taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'
 ];
 
+export const SORTING_TYPES = ['day', 'event', 'time', 'price', 'offers'];
+
 export const getDefaultPoint = () => (
   {
     basePrice: 0,
@@ -32,6 +34,14 @@ export const FilterType = {
   PAST: 'past',
   PRESENT: 'present',
   FUTURE: 'future'
+};
+
+export const SortingType = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFERS: 'offers'
 };
 
 export const MessageWithoutEvent = {

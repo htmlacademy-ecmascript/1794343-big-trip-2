@@ -5,8 +5,8 @@ const points = [
   {
     //id: nanoid(),
     basePrice: 800,
-    dateFrom: '2019-07-10T22:55:56.845Z',
-    dateTo: '2019-07-10T23:22:13.375Z',
+    dateFrom: '2024-01-10T22:55:56.845Z',
+    dateTo: '2024-01-10T23:22:13.375Z',
     destination: 'afe416cq-10xa-ye10-8077-2fs9a01edcab',
     isFavorite: true,
     offers: [
@@ -19,8 +19,8 @@ const points = [
   {
     //id: nanoid(),
     basePrice: 500,
-    dateFrom: '2020-08-12T02:55:56.845Z',
-    dateTo: '2020-08-15T11:14:00.375Z',
+    dateFrom: '2024-03-12T02:55:56.845Z',
+    dateTo: '2024-03-15T11:14:00.375Z',
     destination: 'bfe416cq-10xa-ye10-8077-2fs9a01edcab',
     isFavorite: false,
     offers: [
@@ -31,8 +31,8 @@ const points = [
   {
     //id: nanoid(),
     basePrice: 5100,
-    dateFrom: '2021-10-10T20:40:56.845Z',
-    dateTo: '2021-10-10T22:42:13.375Z',
+    dateFrom: '2024-05-10T20:40:56.845Z',
+    dateTo: '2024-05-10T22:42:13.375Z',
     destination: 'cfe416cq-10xa-ye10-8077-2fs9a01edcab',
     isFavorite: true,
     offers: [
@@ -44,8 +44,8 @@ const points = [
   {
     //id: nanoid(),
     basePrice: 600,
-    dateFrom: '2026-07-01T22:55:56.845Z',
-    dateTo: '2026-07-08T11:22:13.375Z',
+    dateFrom: '2024-07-01T23:05:56.845Z',
+    dateTo: '2024-07-08T11:22:13.375Z',
     destination: 'dfe416cq-10xa-ye10-8077-2fs9a01edcab',
     isFavorite: false,
     offers: [],
@@ -54,8 +54,8 @@ const points = [
   {
     //id: nanoid(),
     basePrice: 780,
-    dateFrom: '2022-07-01T22:55:56.845Z',
-    dateTo: '2022-07-08T11:22:13.375Z',
+    dateFrom: '2024-08-01T22:55:56.845Z',
+    dateTo: '2024-08-08T19:45:13.375Z',
     destination: 'dfe416cq-10xa-ye10-8077-2fs9a01edcab',
     isFavorite: false,
     offers: [
@@ -67,8 +67,8 @@ const points = [
   {
     //id: nanoid(),
     basePrice: 455,
-    dateFrom: '2025-07-01T22:55:56.845Z',
-    dateTo: '2025-07-08T11:22:13.375Z',
+    dateFrom: '2024-10-01T22:55:56.845Z',
+    dateTo: '2024-10-08T11:22:13.375Z',
     destination: 'dfe416cq-10xa-ye10-8077-2fs9a01edcab',
     isFavorite: true,
     offers: [
@@ -79,8 +79,8 @@ const points = [
   {
     //id: nanoid(),
     basePrice: 906,
-    dateFrom: '2025-07-01T22:55:56.845Z',
-    dateTo: '2025-07-08T11:22:13.375Z',
+    dateFrom: '2024-12-01T06:55:56.845Z',
+    dateTo: '2024-12-08T11:29:13.375Z',
     destination: 'dfe416cq-10xa-ye10-8077-2fs9a01edcab',
     isFavorite: false,
     offers: [],
