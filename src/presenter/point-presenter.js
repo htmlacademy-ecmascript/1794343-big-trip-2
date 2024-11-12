@@ -43,6 +43,7 @@ export default class PointPresenter {
       point: this.#point,
       destinations: this.#destinations,
       offers: this.#offers,
+      onRolldownBtnClick: this.#handleRolldownBtnClick,
       onFormSubmit: this.#handleFormSubmit
     });
 
@@ -70,8 +71,13 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
-      this.#replaceFormToEvent();
+      this.#resetForm();
     }
+  }
+
+  #resetForm() {
+    this.#formEditComponent.reset();
+    this.#replaceFormToEvent();
   }
 
   #replaceEventToForm() {
@@ -90,12 +96,16 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#replaceFormToEvent();
+      this.#resetForm();
     }
   };
 
   #handleRollupBtnClick = () => {
     this.#replaceEventToForm();
+  };
+
+  #handleRolldownBtnClick = () => {
+    this.#replaceFormToEvent();
   };
 
   #handleFavoriteClick = () => {
