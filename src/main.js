@@ -5,6 +5,8 @@ import NewEventBtnView from './view/new-event-btn-view.js';
 import FormEditView from './view/form-edit-view.js';
 import { render, remove, RenderPosition } from './framework/render.js';
 import { getDefaultPoint } from './const.js';
+import { destinations } from './mock/destinations.js';
+import { offers } from './mock/offers.js';
 
 const siteHeaderElement = document.querySelector('.trip-main');
 const siteFiltersElement = document.querySelector('.trip-controls__filters');
@@ -26,7 +28,9 @@ const headerPresenter = new HeaderPresenter({
 headerPresenter.init();
 
 const formEditComponent = (new FormEditView({
-  point: getDefaultPoint()
+  point: getDefaultPoint(),
+  destinations: destinations,
+  offers: offers
 }));
 
 const escKeyDownHandler = (evt) => {

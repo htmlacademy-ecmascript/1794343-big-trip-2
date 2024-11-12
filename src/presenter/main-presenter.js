@@ -75,7 +75,8 @@ export default class Presenter {
 
   #renderSorting() {
     this.#sortingComponent = new SortingView({
-      onSortTypeChange: this.#handleSortTypeChange
+      onSortTypeChange: this.#handleSortTypeChange,
+      currentSortType: this.#currentSortType
     });
     render(this.#sortingComponent, this.#container);
   }
