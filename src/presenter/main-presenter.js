@@ -1,17 +1,12 @@
 import EventListView from '../view/event-list-view.js';
 import SortingView from '../view/soritng-view.js';
 import EmptyListView from '../view/empty-list-view.js';
-import { render } from '../framework/render.js';
+import { render, remove } from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
-import { updateItem } from '../utils/common.js';
 import { sortDate, sortPrice, sortTime } from '../utils/event.js';
-import { SortingType } from '../const.js';
+import { SortingType, UpdateType, UserAction } from '../const.js';
 
 export default class Presenter {
-  #points = [];
-  #destinations = [];
-  #offers = [];
-
   #container = null;
   #eventModel = null;
 
@@ -20,20 +15,35 @@ export default class Presenter {
   #noEventsComponent = new EmptyListView();
   #pointPresenters = new Map();
   #currentSortType = SortingType.DAY;
-  #sourcedPoints = [];
 
   constructor({container, eventModel}) {
     this.#container = container;
     this.#eventModel = eventModel;
+    this.#eventModel.addObserver(this.#handleModelEvent);
+  }
+
+  get points() {
+    switch (this.#currentSortType) {
+      case SortingType.DAY:
+        return [...this.#eventModel.points].sort(sortDate);
+      case SortingType.PRICE:
+        return [...this.#eventModel.points].sort(sortPrice);
+      case SortingType.TIME:
+        return [...this.#eventModel.points].sort(sortTime);
+    }
+    return this.#eventModel.points;
+  }
+
+  get destinations() {
+    return this.#eventModel.destinations;
+  }
+
+  get offers() {
+    return this.#eventModel.offers;
   }
 
   init() {
-    this.#points = this.#eventModel.points;
-    this.#sourcedPoints = [...this.#eventModel.points];
-    this.#destinations = this.#eventModel.destinations;
-    this.#offers = this.#eventModel.offers;
-
-    this.#renderMainInfo(this.#points, this.#destinations, this.#offers);
+    this.#renderMainInfo();
   }
 
   #handleModeChange = () => {
@@ -41,36 +51,43 @@ export default class Presenter {
   };
 
 
-  #handlePointChange = (updatedPoint) => {
-    this.#points = updateItem(this.#points, updatedPoint);
-    this.#sourcedPoints = updateItem(this.#sourcedPoints, updatedPoint);
-    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint, this.#destinations, this.#offers);
+  #handleViewAction = (actionType, updateType, update) => {
+    switch (actionType) {
+      case UserAction.UPDATE_POINT:
+        this.#eventModel.updatePoint(updateType, update);
+        break;
+      case UserAction.ADD_POINT:
+        this.#eventModel.addPoint(updateType, update);
+        break;
+      case UserAction.DELETE_POINT:
+        this.#eventModel.deletePoint(updateType, update);
+        break;
+    }
   };
 
-  #sortPoints(sortingType) {
-    switch (sortingType) {
-      case SortingType.DAY:
-        this.#points.sort(sortDate);
+  #handleModelEvent = (updateType, data) => {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#pointPresenters.get(data.id).init(data);
         break;
-      case SortingType.PRICE:
-        this.#points.sort(sortPrice);
+      case UpdateType.MINOR:
+        this.#clearEventList();
+        this.#renderEventListItems();
         break;
-      case SortingType.TIME:
-        this.#points.sort(sortTime);
+      case UpdateType.MAJOR:
+        this.#clearEventList({resetSortType: true});
+        this.#renderEventListItems();
         break;
-      default:
-        this.#points = [...this.#sourcedPoints];
     }
-    this.#currentSortType = sortingType;
-  }
+  };
 
   #handleSortTypeChange = (sortingType) => {
     if (this.#currentSortType === sortingType) {
       return;
     }
-    this.#sortPoints(sortingType);
+    this.#currentSortType = sortingType;
     this.#clearEventList();
-    this.#renderEventListItems(this.#points, this.#destinations, this.#offers);
+    this.#renderEventListItems();
   };
 
   #renderSorting() {
@@ -84,16 +101,16 @@ export default class Presenter {
   #renderPoint (point, destinations, offers) {
     const pointPresenter = new PointPresenter({
       pointContainer: this.#eventListComponent.element,
-      onDataChange: this.#handlePointChange,
+      onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange
     });
     pointPresenter.init(point, destinations, offers);
     this.#pointPresenters.set(point.id, pointPresenter);
   }
 
-  #renderEventListItems (points, destinations, offers) {
-    for (const point of points) {
-      this.#renderPoint(point, destinations, offers);
+  #renderEventListItems () {
+    for (const point of this.points) {
+      this.#renderPoint(point, this.destinations, this.offers);
     }
   }
 
@@ -101,21 +118,28 @@ export default class Presenter {
     render(this.#eventListComponent, this.#container);
   }
 
-  #clearEventList() {
+  #clearEventList ({resetSortType = false} = {}) {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
+
+    remove(this.#noEventsComponent);
+
+    if (resetSortType) {
+      this.#currentSortType = SortingType.DAY;
+      remove(this.#sortingComponent);
+    }
   }
 
-  #renderEmptyList (points) {
-    if (points.length === 0) {
+  #renderEmptyList () {
+    if (this.points.length === 0) {
       render(this.#noEventsComponent, this.#eventListComponent.element);
     }
   }
 
-  #renderMainInfo (points, destinations, offers) {
+  #renderMainInfo () {
     this.#renderSorting();
     this.#renderEventList();
-    this.#renderEventListItems(points, destinations, offers);
-    this.#renderEmptyList(points);
+    this.#renderEventListItems();
+    this.#renderEmptyList();
   }
 }

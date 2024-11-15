@@ -15,8 +15,6 @@ export const POINT_TYPES = [
   'taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'
 ];
 
-export const SORTING_TYPES = ['day', 'event', 'time', 'price', 'offers'];
-
 export const getDefaultPoint = () => (
   {
     basePrice: 0,
@@ -54,4 +52,15 @@ export const MessageWithoutEvent = {
 export const Mode = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING',
+};
+
+export const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+export const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
 };

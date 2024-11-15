@@ -7,7 +7,8 @@ const createSortingTemplate = (currentSortType, sortingType) => {
   const isChecked = sortingType === currentSortType ? 'checked' : '';
   return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
             ${Object.values(SortingType).map((type) => `<div class="trip-sort__item  trip-sort__item--${type}">
-              <input id="sort-${type}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${type}"
+              <input id="sort-${type}" class="trip-sort__input  visually-hidden" type="radio"
+              name="trip-sort" value="sort-${type}"
               ${type === 'event' || type === 'offers' ? 'disabled' : ''}
               ${isChecked}
               data-sort-type="${type}">
