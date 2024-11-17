@@ -42,13 +42,6 @@ export const SortingType = {
   OFFERS: 'offers'
 };
 
-export const MessageWithoutEvent = {
-  EVERYTHING: 'Click New Event to create your first point',
-  PAST: 'There are no past events now',
-  PRESENT: 'There are no present events now',
-  FUTURE: 'There are no future events now'
-};
-
 export const Mode = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING',
@@ -59,6 +52,7 @@ export const UserAction = {
   ADD_POINT: 'ADD_POINT',
   DELETE_POINT: 'DELETE_POINT',
 };
+
 export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',

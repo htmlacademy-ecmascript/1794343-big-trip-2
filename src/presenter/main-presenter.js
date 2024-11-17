@@ -4,34 +4,43 @@ import EmptyListView from '../view/empty-list-view.js';
 import { render, remove } from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
 import { sortDate, sortPrice, sortTime } from '../utils/event.js';
-import { SortingType, UpdateType, UserAction } from '../const.js';
+import { SortingType, UpdateType, UserAction, FilterType } from '../const.js';
+import { filter } from '../utils/filter.js';
 
 export default class Presenter {
   #container = null;
   #eventModel = null;
+  #filterModel = null;
 
   #sortingComponent = null;
   #eventListComponent = new EventListView();
-  #noEventsComponent = new EmptyListView();
+  #noEventsComponent = null;
   #pointPresenters = new Map();
   #currentSortType = SortingType.DAY;
+  #filterType = FilterType.EVERYTHING;
 
-  constructor({container, eventModel}) {
+  constructor({container, eventModel, filterModel}) {
     this.#container = container;
     this.#eventModel = eventModel;
+    this.#filterModel = filterModel;
     this.#eventModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
+    this.#filterType = this.#filterModel.filter;
+    const points = this.#eventModel.points;
+    const filteredPoints = filter[this.#filterType](points);
+
     switch (this.#currentSortType) {
       case SortingType.DAY:
-        return [...this.#eventModel.points].sort(sortDate);
+        return filteredPoints.sort(sortDate);
       case SortingType.PRICE:
-        return [...this.#eventModel.points].sort(sortPrice);
+        return filteredPoints.sort(sortPrice);
       case SortingType.TIME:
-        return [...this.#eventModel.points].sort(sortTime);
+        return filteredPoints.sort(sortTime);
     }
-    return this.#eventModel.points;
+    return filteredPoints;
   }
 
   get destinations() {
@@ -112,6 +121,9 @@ export default class Presenter {
     for (const point of this.points) {
       this.#renderPoint(point, this.destinations, this.offers);
     }
+    if (this.points.length === 0) {
+      this.#renderEmptyList();
+    }
   }
 
   #renderEventList () {
@@ -128,18 +140,22 @@ export default class Presenter {
       this.#currentSortType = SortingType.DAY;
       remove(this.#sortingComponent);
     }
+
+    if (this.#noEventsComponent) {
+      remove(this.#noEventsComponent);
+    }
   }
 
   #renderEmptyList () {
-    if (this.points.length === 0) {
-      render(this.#noEventsComponent, this.#eventListComponent.element);
-    }
+    this.#noEventsComponent = new EmptyListView({
+      filterType: this.#filterType
+    });
+    render(this.#noEventsComponent, this.#eventListComponent.element);
   }
 
   #renderMainInfo () {
     this.#renderSorting();
     this.#renderEventList();
     this.#renderEventListItems();
-    this.#renderEmptyList();
   }
 }

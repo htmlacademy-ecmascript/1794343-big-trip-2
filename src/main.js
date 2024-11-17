@@ -1,4 +1,5 @@
-import EventModel from './model/model.js';
+import EventModel from './model/event-model.js';
+import FilterModel from './model/filter-model.js';
 import Presenter from './presenter/main-presenter.js';
 import HeaderPresenter from './presenter/header-presenter.js';
 import NewEventBtnView from './view/new-event-btn-view.js';
@@ -15,22 +16,29 @@ const siteMainElement = document.querySelector('.trip-events');
 const eventModel = new EventModel();
 eventModel.init();
 
+const filterModel = new FilterModel();
+
 const presenter = new Presenter({
   container: siteMainElement,
-  eventModel: eventModel});
+  eventModel: eventModel,
+  filterModel: filterModel
+});
 presenter.init();
 
 const headerPresenter = new HeaderPresenter({
   headerContainer: siteHeaderElement,
   filtersContainer: siteFiltersElement,
-  eventModel: eventModel
+  eventModel,
+  filterModel
 });
 headerPresenter.init();
 
 const formEditComponent = (new FormEditView({
   point: getDefaultPoint(),
-  destinations: destinations,
-  offers: offers
+  destinations,
+  offers,
+  //onFormSubmit: this.#handleFormSubmit,
+  //onDeleteClick: this.#handleDeleteClick
 }));
 
 const escKeyDownHandler = (evt) => {
