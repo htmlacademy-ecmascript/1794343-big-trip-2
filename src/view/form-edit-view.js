@@ -1,3 +1,4 @@
+import he from 'he';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { POINT_TYPES, DateFormat } from '../const.js';
 import { humanizeEventDueDate } from '../utils/event.js';
@@ -42,7 +43,7 @@ const createDestinationNameTemplate = (point, destinations) => {
                       ${type}
                     </label>
                     <input class="event__input  event__input--destination" id="event-destination-${pointId}" type="text"
-                      name="event-destination" value="${eventDestination?.name || ''}" list="destination-list-${pointId}">
+                      name="event-destination" value="${he.encode(eventDestination?.name || '')}" list="destination-list-${pointId}">
                     <datalist id="destination-list-${pointId}">
                       ${destinations.map((pointDestination) => `<option value="${pointDestination.name}"></option>`).join('')}
                     </datalist>
