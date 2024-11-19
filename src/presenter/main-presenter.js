@@ -1,6 +1,7 @@
 import EventListView from '../view/event-list-view.js';
 import SortingView from '../view/soritng-view.js';
 import EmptyListView from '../view/empty-list-view.js';
+import LoadingView from '../view/loading-view.js';
 import { render, remove, RenderPosition} from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presener.js';
@@ -13,6 +14,7 @@ export default class Presenter {
   #eventModel = null;
   #filterModel = null;
 
+  #loadingComponent = new LoadingView();
   #sortingComponent = null;
   #eventListComponent = new EventListView();
   #noEventsComponent = null;
@@ -20,6 +22,7 @@ export default class Presenter {
   #newPointPresenter = null;
   #currentSortType = SortingType.DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor({container, eventModel, filterModel, onNewPointDestroy}) {
     this.#container = container;
@@ -103,6 +106,11 @@ export default class Presenter {
         this.#clearEventList({resetSortType: true});
         this.#renderEventListItems();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderMainInfo();
+        break;
     }
   };
 
@@ -134,6 +142,11 @@ export default class Presenter {
   }
 
   #renderEventListItems () {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     this.#renderSorting();
 
     if (this.points.length === 0) {
@@ -155,6 +168,7 @@ export default class Presenter {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
     remove(this.#sortingComponent);
+    remove(this.#loadingComponent);
 
     if (resetSortType) {
       this.#currentSortType = SortingType.DAY;
@@ -163,6 +177,10 @@ export default class Presenter {
     if (this.#noEventsComponent) {
       remove(this.#noEventsComponent);
     }
+  }
+
+  #renderLoading() {
+    render(this.#loadingComponent, this.#eventListComponent.element, RenderPosition.AFTERBEGIN);
   }
 
   #renderEmptyList () {

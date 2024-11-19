@@ -4,12 +4,18 @@ import Presenter from './presenter/main-presenter.js';
 import HeaderPresenter from './presenter/header-presenter.js';
 import NewEventBtnView from './view/new-event-btn-view.js';
 import { render } from './framework/render.js';
+import PointsApiService from './points-api-service.js';
+
+const AUTHORIZATION = 'Basic hSq3498tujaqtlkgl1sa2j';
+const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 
 const siteHeaderElement = document.querySelector('.trip-main');
 const siteFiltersElement = document.querySelector('.trip-controls__filters');
 const siteMainElement = document.querySelector('.trip-events');
 
-const eventModel = new EventModel();
+const eventModel = new EventModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
+});
 const filterModel = new FilterModel();
 
 const presenter = new Presenter({
@@ -37,8 +43,9 @@ function handleNewPointFormClose() {
   newEventBtn.element.disabled = false;
 }
 
-render(newEventBtn, siteHeaderElement);
-
-eventModel.init();
+eventModel.init()
+  .finally(() => {
+    render(newEventBtn, siteHeaderElement);
+  });
 presenter.init();
 headerPresenter.init();

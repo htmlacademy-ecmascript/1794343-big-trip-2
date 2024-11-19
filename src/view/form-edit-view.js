@@ -116,7 +116,7 @@ const createOffersTemplate = (point, offers) => {
 const createDestinationsTemplate = (point, destinations) => {
   const eventDestination = destinations.find((destination) => (destination.id === point.destination));
   const {description, pictures} = eventDestination || {};
-  return `${eventDestination ?
+  return `${(description && pictures) ?
     `<section class="event__section  event__section--destination">
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                     <p class="event__destination-description">${description}</p>
