@@ -3,10 +3,9 @@ import FormEditView from '../view/form-edit-view.js';
 import { nanoid } from 'nanoid';
 import { UserAction, UpdateType } from '../const.js';
 import { getDefaultPoint } from '../const.js';
-import { destinations } from '../mock/destinations.js';
-import { offers } from '../mock/offers.js';
-
 export default class NewPointPresenter {
+  #destinations = [];
+  #offers = [];
   #pointListContainer = null;
   #handleDataChange = null;
   #handleDestroy = null;
@@ -24,8 +23,8 @@ export default class NewPointPresenter {
     }
     this.#formEditComponent = new FormEditView({
       point: getDefaultPoint(),
-      destinations,
-      offers,
+      destinations: this.#destinations,
+      offers: this.#offers,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick
     });
