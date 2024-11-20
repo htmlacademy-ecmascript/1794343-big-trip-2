@@ -27,7 +27,11 @@ function isEventToday(dueDate) {
 function isEventHappened(dueDate) {
   return dueDate && dayjs().isAfter(dueDate, 'D');
 }
-
+/*const data = '2020-11-17T13:25:00.000Z';
+console.log('past:', isEventHappened(data));
+console.log('today:', isEventToday(data));
+console.log('future:', isEventBeInFuture(data));
+*/
 function isEventBeInFuture(dueDate) {
   return dueDate && dayjs().isBefore(dueDate, 'D');
 }

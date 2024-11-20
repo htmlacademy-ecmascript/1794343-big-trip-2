@@ -1,3 +1,8 @@
+export const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
 export const DateFormat = {
   EVENT_DATE: 'MMM D',
   EVENT_TIME: 'HH:mm',
@@ -56,4 +61,5 @@ export const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
+  ERROR: 'ERROR'
 };

@@ -1,6 +1,5 @@
 import { remove, render, RenderPosition } from '../framework/render.js';
 import FormEditView from '../view/form-edit-view.js';
-import { nanoid } from 'nanoid';
 import { UserAction, UpdateType } from '../const.js';
 import { getDefaultPoint } from '../const.js';
 export default class NewPointPresenter {
@@ -17,10 +16,12 @@ export default class NewPointPresenter {
     this.#handleDestroy = onDestroy;
   }
 
-  init() {
+  init(offers, destinations) {
     if (this.#formEditComponent !== null) {
       return;
     }
+    this.#offers = offers;
+    this.#destinations = destinations;
     this.#formEditComponent = new FormEditView({
       point: getDefaultPoint(),
       destinations: this.#destinations,
@@ -42,15 +43,30 @@ export default class NewPointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
+  setSaving() {
+    this.#formEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#formEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+    this.#formEditComponent.shake(resetFormState);
+  }
+
   #handleFormSubmit = (point) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      // Пока у нас нет сервера, который бы после сохранения
-      // выдывал честный id задачи, нам нужно позаботиться об этом самим
-      {id: nanoid(), ...point},
+      point
     );
-    this.destroy();
   };
 
   #handleDeleteClick = () => {

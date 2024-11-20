@@ -1,12 +1,14 @@
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import EventListView from '../view/event-list-view.js';
 import SortingView from '../view/soritng-view.js';
 import EmptyListView from '../view/empty-list-view.js';
 import LoadingView from '../view/loading-view.js';
+import FailedLoadDataView from '../view/failed-load-data.js';
 import { render, remove, RenderPosition} from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presener.js';
 import { sortDate, sortPrice, sortTime } from '../utils/event.js';
-import { SortingType, UpdateType, UserAction, FilterType } from '../const.js';
+import { SortingType, UpdateType, UserAction, FilterType, TimeLimit } from '../const.js';
 import { filter } from '../utils/filter.js';
 
 export default class Presenter {
@@ -15,6 +17,7 @@ export default class Presenter {
   #filterModel = null;
 
   #loadingComponent = new LoadingView();
+  #failedLoadDataComponent = new FailedLoadDataView();
   #sortingComponent = null;
   #eventListComponent = new EventListView();
   #noEventsComponent = null;
@@ -23,6 +26,10 @@ export default class Presenter {
   #currentSortType = SortingType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT
+  });
 
   constructor({container, eventModel, filterModel, onNewPointDestroy}) {
     this.#container = container;
@@ -64,13 +71,13 @@ export default class Presenter {
   }
 
   init() {
-    this.#renderMainInfo();
+    this.#renderEventListItems();
   }
 
   createPoint() {
     this.#currentSortType = SortingType.DAY;
     this.#filterModel.setFilter(UpdateType.MINOR, FilterType.EVERYTHING);
-    this.#newPointPresenter.init();
+    this.#newPointPresenter.init(this.offers, this.destinations);
   }
 
 
@@ -79,18 +86,35 @@ export default class Presenter {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#eventModel.updatePoint(updateType, update);
+        this.#pointPresenters.get(update.id).setSaving();
+        try {
+          await this.#eventModel.updatePoint(updateType, update);
+        } catch(err) {
+          this.#pointPresenters.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_POINT:
-        this.#eventModel.addPoint(updateType, update);
+        this.#newPointPresenter.setSaving();
+        try {
+          await this.#eventModel.addPoint(updateType, update);
+        } catch(err) {
+          this.#newPointPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_POINT:
-        this.#eventModel.deletePoint(updateType, update);
+        this.#pointPresenters.get(update.id).setDeleting();
+        try {
+          await this.#eventModel.deletePoint(updateType, update);
+        } catch(err) {
+          this.#pointPresenters.get(update.id).setAborting();
+        }
         break;
     }
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
@@ -109,7 +133,14 @@ export default class Presenter {
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
-        this.#renderMainInfo();
+        this.#renderEventListItems();
+        break;
+      case UpdateType.ERROR:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        remove(this.#sortingComponent);
+        this.#clearEventList();
+        this.#renderFailedLoadDataMessage();
         break;
     }
   };
@@ -142,12 +173,14 @@ export default class Presenter {
   }
 
   #renderEventListItems () {
+    remove(this.#failedLoadDataComponent);
     if (this.#isLoading) {
       this.#renderLoading();
       return;
     }
 
     this.#renderSorting();
+    this.#renderEventList();
 
     if (this.points.length === 0) {
       this.#renderEmptyList();
@@ -180,7 +213,11 @@ export default class Presenter {
   }
 
   #renderLoading() {
-    render(this.#loadingComponent, this.#eventListComponent.element, RenderPosition.AFTERBEGIN);
+    render(this.#loadingComponent, this.#container);
+  }
+
+  #renderFailedLoadDataMessage() {
+    render(this.#failedLoadDataComponent, this.#container);
   }
 
   #renderEmptyList () {
@@ -188,11 +225,7 @@ export default class Presenter {
       filterType: this.#filterType
     });
     remove(this.#sortingComponent);
-    render(this.#noEventsComponent, this.#eventListComponent.element);
-  }
-
-  #renderMainInfo () {
-    this.#renderEventList();
-    this.#renderEventListItems();
+    remove(this.#eventListComponent);
+    render(this.#noEventsComponent, this.#container);
   }
 }
