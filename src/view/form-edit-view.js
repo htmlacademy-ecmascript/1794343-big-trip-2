@@ -1,4 +1,3 @@
-import he from 'he';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { POINT_TYPES, DateFormat } from '../const.js';
 import { humanizeEventDueDate } from '../utils/event.js';
@@ -46,7 +45,7 @@ const createDestinationNameTemplate = (point, destinations) => {
                     </label>
                     <input class="event__input  event__input--destination" id="event-destination-${pointId}" type="text"
                       name="event-destination"
-                      value="${he.encode(eventDestination?.name || '')}"
+                      value="${eventDestination?.name || ''}"
                       list="destination-list-${pointId}"
                       ${isDisabled ? 'disabled' : ''}>
                     <datalist id="destination-list-${pointId}">
@@ -92,10 +91,10 @@ const createBtnsTemplate = (point) => {
   const {isDisabled, isDeleting, isSaving} = point;
   const isDeleteCheck = isDeleting ? 'Deleting...' : 'Delete';
   return `<button class="event__save-btn  btn  btn--blue" type="submit"
-                  ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+                  ${isDisabled ? 'disabled' : ''}>
+                  ${isSaving ? 'Saving...' : 'Save'}</button>
                   <button class="event__reset-btn" type="reset">
                   ${pointId ? isDeleteCheck : 'Cancel'}
-                  ${isDisabled ? 'disabled' : ''}
                   </button>
                   ${pointId ? `<button class="event__rollup-btn" type="button">
                     <span class="visually-hidden">Open event</span>
@@ -202,6 +201,8 @@ export default class FormEditView extends AbstractStatefulView {
       .addEventListener('change', this.#pointTypeChangeHandler);
     this.element.querySelector('.event__input--destination')
       .addEventListener('input', this.#destinationInputHandler);
+    this.element.querySelector('.event__input--destination')
+      .addEventListener('blur', this.#destinationBlurHandler);
     this.element.querySelector('.event__available-offers')
       ?.addEventListener('change', this.#offersChangeHandler);
     this.element.querySelector('.event__input--price')
@@ -211,7 +212,7 @@ export default class FormEditView extends AbstractStatefulView {
   }
 
   get template() {
-    return createFormEditTemplate(this._state, this.#destinations, this.#offers);
+    return createFormEditTemplate(this._state, this.#offers, this.#destinations,);
   }
 
   removeElement() {
@@ -255,6 +256,13 @@ export default class FormEditView extends AbstractStatefulView {
     });
   };
 
+  #destinationBlurHandler = (evt) => {
+    const checkedPointDestination = this.#destinations.find((destination) => destination.id === this._state.destination);
+    if (checkedPointDestination) {
+      evt.target.value = checkedPointDestination.name;
+    }
+  };
+
   #destinationInputHandler = (evt) => {
     const checkedPointDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
     if (checkedPointDestination) {
@@ -272,10 +280,14 @@ export default class FormEditView extends AbstractStatefulView {
   };
 
   #priceChangeHandler = (evt) => {
-    evt.preventDefault();
-    this._setState({
-      basePrice: parseInt(evt.target.value, 10),
-    });
+    const price = Number(evt.target.value);
+    if (!isNaN(price) && price >= 0) {
+      this._setState({
+        basePrice: price,
+      });
+    } else {
+      evt.target.value = this._state.basePrice;
+    }
   };
 
   #dateFromCloseHandler = ([userDate]) => {

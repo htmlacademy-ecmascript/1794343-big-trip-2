@@ -6,7 +6,7 @@ import NewEventBtnView from './view/new-event-btn-view.js';
 import { render } from './framework/render.js';
 import PointsApiService from './points-api-service.js';
 
-const AUTHORIZATION = 'Basic hSq3w65yh56eujaqtlkgl1sa2j';
+const AUTHORIZATION = 'Basic hSqebw5yhghghftg';
 const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 
 const siteHeaderElement = document.querySelector('.trip-main');
