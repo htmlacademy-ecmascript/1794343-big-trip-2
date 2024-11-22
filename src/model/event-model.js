@@ -14,22 +14,15 @@ export default class EventModel extends Observable {
     try {
       const points = await this.#pointsApiService.points;
       this.#points = points.map(this.#adaptToClient);
+      this.#destinations = await this.#pointsApiService.destinations;
+      this.#offers = await this.#pointsApiService.offers;
+      this._notify(UpdateType.INIT);
     } catch(err) {
       this.#points = [];
-    }
-
-    try {
-      this.#destinations = await this.#pointsApiService.destinations;
-    } catch(err) {
       this.#destinations = [];
-    }
-
-    try {
-      this.#offers = await this.#pointsApiService.offers;
-    } catch(err) {
       this.#offers = [];
+      this._notify(UpdateType.ERROR);
     }
-    this._notify(UpdateType.INIT);
   }
 
   get points() {
@@ -63,24 +56,35 @@ export default class EventModel extends Observable {
     }
   }
 
-  addPoint(updateType, update) {
-    this.#points = [
-      update,
-      ...this.#points,
-    ];
-    this._notify(updateType, update);
+  async addPoint(updateType, update) {
+    try {
+      const response = await this.#pointsApiService.addPoint(update);
+      const newPoint = this.#adaptToClient(response);
+      this.#points = [
+        newPoint,
+        ...this.#points,
+      ];
+      this._notify(updateType, newPoint);
+    } catch(err) {
+      throw new Error('Can\'t add point');
+    }
   }
 
-  deletePoint(updateType, update) {
+  async deletePoint(updateType, update) {
     const index = this.#points.findIndex((point) => point.id === update.id);
     if (index === -1) {
       throw new Error('Can\'t delete unexisting point');
     }
-    this.#points = [
-      ...this.#points.slice(0, index),
-      ...this.#points.slice(index + 1),
-    ];
-    this._notify(updateType);
+    try {
+      await this.#pointsApiService.deletePoint(update);
+      this.#points = [
+        ...this.#points.slice(0, index),
+        ...this.#points.slice(index + 1),
+      ];
+      this._notify(updateType);
+    } catch(err) {
+      throw new Error('Can\'t delete point');
+    }
   }
 
   #adaptToClient(point) {

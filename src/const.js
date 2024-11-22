@@ -1,3 +1,8 @@
+export const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
 export const DateFormat = {
   EVENT_DATE: 'MMM D',
   EVENT_TIME: 'HH:mm',
@@ -6,7 +11,8 @@ export const DateFormat = {
 
 export const TimeConst = {
   MINUTES_PER_HOUR: 60,
-  MINUTES_PER_DAY: 3600
+  MINUTES_PER_DAY: 1440,
+  MINUTES_PER_100_DAYS: 1440 * 100
 };
 
 export const POINT_TYPES = [
@@ -16,8 +22,8 @@ export const POINT_TYPES = [
 export const getDefaultPoint = () => (
   {
     basePrice: 0,
-    dateFrom: new Date().toISOString(),
-    dateTo: new Date().toISOString(),
+    dateFrom: '',
+    dateTo: '',
     destination: 0,
     isFavorite: false,
     offers: [],
@@ -27,9 +33,9 @@ export const getDefaultPoint = () => (
 
 export const FilterType = {
   EVERYTHING: 'everything',
-  PAST: 'past',
+  FUTURE: 'future',
   PRESENT: 'present',
-  FUTURE: 'future'
+  PAST: 'past',
 };
 
 export const SortingType = {
@@ -56,4 +62,5 @@ export const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
+  ERROR: 'ERROR'
 };

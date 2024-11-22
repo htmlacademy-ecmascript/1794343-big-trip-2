@@ -10,55 +10,46 @@ function humanizeEventDueDate(dueDate, dateFormat) {
 
 function getTimeDuration(start, end) {
   const minutesDuration = dayjs(end).diff(start, 'minute');
-
   if (minutesDuration < TimeConst.MINUTES_PER_HOUR) {
     return dayjs.duration(minutesDuration, 'minutes').format('mm[M]');
   }
   if (minutesDuration < TimeConst.MINUTES_PER_DAY) {
     return dayjs.duration(minutesDuration, 'minutes').format('HH[H] mm[M]');
   }
+  if (minutesDuration >= TimeConst.MINUTES_PER_100_DAYS) {
+    const daysDuration = dayjs(end).diff(start, 'day');
+    const hoursAndMinutesDuration = dayjs.duration(minutesDuration, 'minutes').format('HH[H] mm[M]');
+    return `${daysDuration}D ${hoursAndMinutesDuration}`;
+  }
   return dayjs.duration(minutesDuration, 'minutes').format('DD[D] HH[H] mm[M]');
 }
 
-function isEventToday(dueDate) {
-  return dueDate && dayjs(dueDate).isSame(dayjs(), 'D');
+function isEventToday(dateFrom, dateTo) {
+  return (dayjs(dateFrom).isSame(dayjs(), 'D') || dayjs().isAfter(dateFrom, 'D')) &&
+         (dayjs(dateTo).isSame(dayjs(), 'D') || dayjs().isBefore(dateTo, 'D'));
 }
 
-function isEventHappened(dueDate) {
-  return dueDate && dayjs().isAfter(dueDate, 'D');
+
+function isEventHappened(dateTo) {
+  return dateTo && dayjs().isAfter(dateTo, 'D');
 }
 
-function isEventBeInFuture(dueDate) {
-  return dueDate && dayjs().isBefore(dueDate, 'D');
+function isEventBeInFuture(dateFrom) {
+  return dateFrom && dayjs().isBefore(dateFrom, 'D');
 }
 
-function getWeightForNull(eventA, eventB) {
-  if (eventA === null && eventB === null) {
-    return 0;
-  }
-  if (eventA === null) {
-    return 1;
-  }
-  if (eventB === null) {
-    return -1;
-  }
-  return null;
-}
 function sortDate(eventA, eventB) {
-  const weight = getWeightForNull(eventA.dateFrom, eventB.dateFrom);
-  return weight ?? dayjs(eventB.dateFrom).diff(dayjs(eventA.dateFrom));
+  return dayjs(eventA.dateFrom).diff(dayjs(eventB.dateFrom));
 }
 
 function sortPrice(eventA, eventB) {
-  const weight = getWeightForNull(eventA.basePrice, eventB.basePrice);
-  return weight ?? (eventB.basePrice - eventA.basePrice);
+  return eventB.basePrice - eventA.basePrice;
 }
 
 function sortTime(eventA, eventB) {
-  const weight = getWeightForNull(eventA, eventB);
   const durationA = dayjs(eventA.dateFrom).diff(dayjs(eventA.dateTo));
   const durationB = dayjs(eventB.dateFrom).diff(dayjs(eventB.dateTo));
-  return weight ?? (durationA - durationB);
+  return (durationA - durationB);
 }
 
 export {humanizeEventDueDate, getTimeDuration, isEventToday, isEventHappened, isEventBeInFuture, sortDate, sortPrice, sortTime};
