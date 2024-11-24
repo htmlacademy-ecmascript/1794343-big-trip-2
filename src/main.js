@@ -1,16 +1,16 @@
 import EventModel from './model/event-model.js';
 import FilterModel from './model/filter-model.js';
-import Presenter from './presenter/main-presenter.js';
+import NewEventButtonPresenter from './presenter/new-button-presenter.js';
+import MainPresenter from './presenter/main-presenter.js';
 import HeaderPresenter from './presenter/header-presenter.js';
-import NewEventBtnView from './view/new-event-btn-view.js';
-import { render } from './framework/render.js';
+import FilterPresenter from './presenter/filter-presenter.js';
 import PointsApiService from './points-api-service.js';
 
-const AUTHORIZATION = 'Basic hSqebw5yhghghftg';
+const AUTHORIZATION = 'Basic hSrfrololooldyj';
 const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 
 const siteHeaderElement = document.querySelector('.trip-main');
-const siteFiltersElement = document.querySelector('.trip-controls__filters');
+const siteFiltersElement = siteHeaderElement.querySelector('.trip-controls__filters');
 const siteMainElement = document.querySelector('.trip-events');
 
 const eventModel = new EventModel({
@@ -18,7 +18,7 @@ const eventModel = new EventModel({
 });
 const filterModel = new FilterModel();
 
-const presenter = new Presenter({
+const presenter = new MainPresenter({
   container: siteMainElement,
   eventModel,
   filterModel,
@@ -27,25 +27,38 @@ const presenter = new Presenter({
 
 const headerPresenter = new HeaderPresenter({
   headerContainer: siteHeaderElement,
-  filtersContainer: siteFiltersElement,
   eventModel,
-  filterModel
 });
 
-const newEventBtn = new NewEventBtnView({
-  onClick: () => {
-    presenter.createPoint();
-    newEventBtn.element.disabled = true;
-  }
+const newEventBtnPresenter = new NewEventButtonPresenter({
+  headerContainer: siteHeaderElement,
+  eventModel,
+  onBtnClick: handleNewPointBtnClick
 });
 
 function handleNewPointFormClose() {
-  newEventBtn.element.disabled = false;
+  newEventBtnPresenter.undisableButton();
+  if (eventModel.points.length === 0) {
+    presenter.renderEmptyList();
+  }
 }
+
+function handleNewPointBtnClick() {
+  presenter.createPoint();
+  newEventBtnPresenter.disableButton();
+}
+
+
+const filterPresenter = new FilterPresenter({
+  filterContainer: siteFiltersElement,
+  eventModel,
+  filterModel,
+});
 
 eventModel.init()
   .finally(() => {
-    render(newEventBtn, siteHeaderElement);
+    newEventBtnPresenter.init();
+    filterPresenter.init();
   });
 presenter.init();
 headerPresenter.init();

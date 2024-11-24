@@ -3,7 +3,6 @@ import { POINT_TYPES, DateFormat } from '../const.js';
 import { humanizeEventDueDate } from '../utils/event.js';
 import { makeFirstCharBig } from '../utils/common.js';
 import flatpickr from 'flatpickr';
-
 import 'flatpickr/dist/flatpickr.min.css';
 
 const createTypeTemplate = (point) => {
@@ -150,7 +149,6 @@ const createDestinationsTemplate = (point, destinations) => {
               </form>`;
 };
 
-
 const createFormEditTemplate = (point, offers, destinations) => (
   `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -168,7 +166,6 @@ const createFormEditTemplate = (point, offers, destinations) => (
               </form>
               </li>`
 );
-
 export default class FormEditView extends AbstractStatefulView {
   #destinations = [];
   #offers = [];
@@ -332,7 +329,6 @@ export default class FormEditView extends AbstractStatefulView {
       },
     );
   }
-
 
   static parsePointToState(point) {
     return {...point,

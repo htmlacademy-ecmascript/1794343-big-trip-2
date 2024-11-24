@@ -16,7 +16,8 @@ export default class NewPointPresenter {
     this.#handleDestroy = onDestroy;
   }
 
-  init(offers, destinations) {
+  init(offers, destinations, pointListContainer) {
+    this.#pointListContainer = pointListContainer;
     if (this.#formEditComponent !== null) {
       return;
     }

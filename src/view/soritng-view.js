@@ -1,5 +1,4 @@
 import AbstractView from '../framework/view/abstract-view.js';
-//import { SORTING_TYPES } from '../const.js';
 import { SortingType } from '../const.js';
 import { makeFirstCharBig } from '../utils/common.js';
 

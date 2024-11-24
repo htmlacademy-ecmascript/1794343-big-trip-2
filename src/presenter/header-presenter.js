@@ -1,32 +1,42 @@
-import FilterPresenter from './filter-presenter.js';
 import TripInfoView from '../view/trip-info-view.js';
-import { render, RenderPosition } from '../framework/render.js';
-
+import { render, replace, remove, RenderPosition } from '../framework/render.js';
 export default class HeaderPresenter {
   #eventModel = null;
-  #filterModel = null;
   #headerContainer = null;
-  #filtersContainer = null;
-  #tripInfoComponent = new TripInfoView();
+  #tripInfoComponent = null;
 
-  constructor({headerContainer, filtersContainer, eventModel, filterModel}) {
+  constructor({headerContainer, eventModel}) {
     this.#headerContainer = headerContainer;
-    this.#filtersContainer = filtersContainer;
     this.#eventModel = eventModel;
-    this.#filterModel = filterModel;
+    this.#eventModel.addObserver(this.#handleModelEvent);
   }
 
   init() {
-    render(this.#tripInfoComponent, this.#headerContainer, RenderPosition.AFTERBEGIN);
-    this.#renderFilters();
+    const points = this.#eventModel.points;
+    if (points.length > 0) {
+      this.#renderTripInfo();
+    }
+    if (points.length === 0) {
+      remove(this.#tripInfoComponent);
+    }
   }
 
-  #renderFilters () {
-    const filterPresenter = new FilterPresenter({
-      filterContainer: this.#filtersContainer,
-      filterModel: this.#filterModel,
-      eventModel: this.#eventModel
+  #renderTripInfo() {
+    const prevTripInfoComponent = this.#tripInfoComponent;
+    this.#tripInfoComponent = new TripInfoView({
+      points: this.#eventModel.points,
+      destinations: this.#eventModel.destinations,
+      offers: this.#eventModel.offers,
     });
-    filterPresenter.init();
+    if (prevTripInfoComponent === null) {
+      render(this.#tripInfoComponent, this.#headerContainer, RenderPosition.AFTERBEGIN);
+      return;
+    }
+    replace(this.#tripInfoComponent, prevTripInfoComponent);
+    remove(prevTripInfoComponent);
   }
+
+  #handleModelEvent = () => {
+    this.init();
+  };
 }

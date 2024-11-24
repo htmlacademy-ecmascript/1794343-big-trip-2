@@ -5,6 +5,8 @@ export const TimeLimit = {
 
 export const DateFormat = {
   EVENT_DATE: 'MMM D',
+  HEADER_DAY_MONTH: 'D MMM',
+  HEADER_ONLY_DAY: 'D',
   EVENT_TIME: 'HH:mm',
   NEW_EVENT: 'DD/MM/YY HH:mm'
 };
