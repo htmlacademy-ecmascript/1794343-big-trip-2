@@ -11,7 +11,7 @@ import { sortDate, sortPrice, sortTime } from '../utils/event.js';
 import { SortingType, UpdateType, UserAction, FilterType, TimeLimit } from '../const.js';
 import { filter } from '../utils/filter.js';
 
-export default class Presenter {
+export default class MainPresenter {
   #container = null;
   #eventModel = null;
   #filterModel = null;
@@ -77,7 +77,11 @@ export default class Presenter {
   createPoint() {
     this.#currentSortType = SortingType.DAY;
     this.#filterModel.setFilter(UpdateType.MINOR, FilterType.EVERYTHING);
-    this.#newPointPresenter.init(this.offers, this.destinations);
+    if (this.points.length === 0) {
+      remove(this.#noEventsComponent);
+      this.#renderEventList();
+    }
+    this.#newPointPresenter.init(this.offers, this.destinations, this.#eventListComponent.element);
   }
 
 
@@ -183,7 +187,7 @@ export default class Presenter {
     this.#renderEventList();
 
     if (this.points.length === 0) {
-      this.#renderEmptyList();
+      this.renderEmptyList();
       return;
     }
 
@@ -220,7 +224,7 @@ export default class Presenter {
     render(this.#failedLoadDataComponent, this.#container);
   }
 
-  #renderEmptyList () {
+  renderEmptyList () {
     this.#noEventsComponent = new EmptyListView({
       filterType: this.#filterType
     });

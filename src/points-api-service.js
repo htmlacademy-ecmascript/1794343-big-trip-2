@@ -59,7 +59,7 @@ export default class PointsApiService extends ApiService {
       'date_to': point.dateTo instanceof Date ? point.dateTo.toISOString() : null,
       'is_favorite': point.isFavorite,
     };
-    // Ненужные ключи мы удаляем
+
     delete adaptedPoint.basePrice;
     delete adaptedPoint.dateFrom;
     delete adaptedPoint.dateTo;
