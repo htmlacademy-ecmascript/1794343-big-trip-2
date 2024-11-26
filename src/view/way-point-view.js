@@ -106,13 +106,11 @@ export default class WayPointView extends AbstractView {
     return createWayPointTemplate(this.#point, this.#destinations, this.#offers);
   }
 
-  #rollupBtnClickHandler = (evt) => {
-    evt.preventDefault();
+  #rollupBtnClickHandler = () => {
     this.#handleRollupBtnClick();
   };
 
-  #favoriteClickHandler = (evt) => {
-    evt.preventDefault();
+  #favoriteClickHandler = () => {
     this.#handleFavoriteClick();
   };
 }

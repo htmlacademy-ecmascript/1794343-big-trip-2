@@ -180,7 +180,6 @@ export default class FormEditView extends AbstractStatefulView {
     this._setState(FormEditView.parsePointToState(point));
     this.#destinations = destinations;
     this.#offers = offers;
-
     this.#handleFormSubmit = onFormSubmit;
     this.#handleRolldownBtnClick = onRolldownBtnClick;
     this.#handleDeleteClick = onDeleteClick;
@@ -225,19 +224,12 @@ export default class FormEditView extends AbstractStatefulView {
     }
   }
 
-  reset(point) {
-    this.updateElement(
-      FormEditView.parsePointToState(point),
-    );
-  }
-
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit(FormEditView.parseStateToPoint(this._state));
   };
 
-  #rolldownBtnClickHandler = (evt) => {
-    evt.preventDefault();
+  #rolldownBtnClickHandler = () => {
     this.#handleRolldownBtnClick(FormEditView.parsePointToState(this.point));
   };
 
@@ -269,10 +261,18 @@ export default class FormEditView extends AbstractStatefulView {
     }
   };
 
-  #offersChangeHandler = () => {
-    const checkedOffers = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
+  #offersChangeHandler = (evt) => {
+    let eventOffers = this._state.offers;
+    const checkedOffers = evt.target.checked;
+
+    if (checkedOffers) {
+      eventOffers.push(evt.target.dataset.offerId);
+    } else {
+      eventOffers = eventOffers.filter((offer) => offer !== evt.target.dataset.offerId);
+    }
+
     this._setState({
-      offers: checkedOffers.map((checkedOffer) => checkedOffer.dataset.offerId)
+      offers: eventOffers
     });
   };
 

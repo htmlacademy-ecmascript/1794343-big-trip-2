@@ -13,9 +13,9 @@ export default class EventModel extends Observable {
   async init() {
     try {
       const points = await this.#pointsApiService.points;
-      this.#points = points.map(this.#adaptToClient);
       this.#destinations = await this.#pointsApiService.destinations;
       this.#offers = await this.#pointsApiService.offers;
+      this.#points = points.map(this.#adaptToClient);
       this._notify(UpdateType.INIT);
     } catch(err) {
       this.#points = [];
