@@ -100,13 +100,13 @@ const createBtnsTemplate = (point) => {
                   </button>` : ''}`;
 };
 
-const createOffersTemplate = (point, offers) => {
+const createEventDetailsTemplate = (point, offers, destinations) => {
   const pointId = point.id || 0;
   const {isDisabled} = point;
   const typeOffers = offers.find((offer) => offer.type === point.type).offers;
   const eventOffers = typeOffers?.filter((typeOffer) => point.offers.includes(typeOffer.id));
 
-  return `${typeOffers.length ?
+  const createOffersTemplate = () => `${typeOffers.length ?
     `<section class="event__section  event__section--offers">
                     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
                     <div class="event__available-offers">
@@ -129,12 +129,11 @@ const createOffersTemplate = (point, offers) => {
                     </div>
                   </section>`
     : ''}`;
-};
 
-const createDestinationsTemplate = (point, destinations) => {
   const eventDestination = destinations.find((destination) => (destination.id === point.destination));
   const {description, pictures} = eventDestination || {};
-  return `${(description && pictures) ?
+
+  const createDestinationsTemplate = () => `${(description && pictures) ?
     `<section class="event__section  event__section--destination">
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                     <p class="event__destination-description">${description}</p>
@@ -147,6 +146,11 @@ const createDestinationsTemplate = (point, destinations) => {
                   </section>` : ''}
                 </section>
               </form>`;
+  return (!typeOffers.length) && (!description && pictures) ? '' :
+    `<section class="event__details">
+                  ${createOffersTemplate(point, offers)}
+                  ${createDestinationsTemplate(point, destinations)}
+                </section>`;
 };
 
 const createFormEditTemplate = (point, offers, destinations) => (
@@ -159,10 +163,7 @@ const createFormEditTemplate = (point, offers, destinations) => (
                   ${createPriceTemplate(point)}
                   ${createBtnsTemplate(point)}
                 </header>
-                <section class="event__details">
-                  ${createOffersTemplate(point, offers)}
-                  ${createDestinationsTemplate(point, destinations)}
-                </section>
+                ${createEventDetailsTemplate(point, offers, destinations)}
               </form>
               </li>`
 );
