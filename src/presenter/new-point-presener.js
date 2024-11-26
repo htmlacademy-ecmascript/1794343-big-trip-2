@@ -1,7 +1,7 @@
 import { remove, render, RenderPosition } from '../framework/render.js';
 import FormEditView from '../view/form-edit-view.js';
 import { UserAction, UpdateType } from '../const.js';
-import { Mode, getDefaultPoint } from '../const.js';
+import { getDefaultPoint } from '../const.js';
 
 export default class NewPointPresenter {
   #destinations = [];
@@ -10,7 +10,6 @@ export default class NewPointPresenter {
   #handleDataChange = null;
   #handleDestroy = null;
   #formEditComponent = null;
-  #mode = Mode.DEFAULT;
 
   constructor({pointListContainer, onDataChange, onDestroy}) {
     this.#pointListContainer = pointListContainer;
@@ -55,7 +54,7 @@ export default class NewPointPresenter {
 
   setAborting() {
     const resetFormState = () => {
-      if (this.#mode === Mode.EDITING) {
+      if (this.#formEditComponent !== null) {
         this.#formEditComponent.updateElement({
           isDisabled: false,
           isSaving: false,
