@@ -22,8 +22,7 @@ export default class NewEventBtnView extends AbstractView {
     return createNewEventBtnTemplate(this.#destinations, this.#offers);
   }
 
-  #clickHandler = (evt) => {
-    evt.preventDefault();
+  #clickHandler = () => {
     this.#handleClick();
   };
 }

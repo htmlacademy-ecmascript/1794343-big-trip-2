@@ -1,6 +1,6 @@
 import EventModel from './model/event-model.js';
 import FilterModel from './model/filter-model.js';
-import NewEventButtonPresenter from './presenter/new-button-presenter.js';
+import NewEventButtonPresenter from './presenter/new-event-button-presenter.js';
 import MainPresenter from './presenter/main-presenter.js';
 import HeaderPresenter from './presenter/header-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
@@ -55,10 +55,8 @@ const filterPresenter = new FilterPresenter({
   filterModel,
 });
 
-eventModel.init()
-  .finally(() => {
-    newEventBtnPresenter.init();
-    filterPresenter.init();
-  });
+eventModel.init();
+newEventBtnPresenter.init();
+filterPresenter.init();
 presenter.init();
 headerPresenter.init();

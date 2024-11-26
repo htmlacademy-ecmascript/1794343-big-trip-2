@@ -7,7 +7,6 @@ function createTripInfoTemplate(points, destinations, offers) {
 
   const startDate = getMinDate(points);
   const endDate = getMaxDate(points);
-  const isMonthTheSame = dayjs(startDate).format('MMM') === dayjs(endDate).format('MMM');
 
   const firstPoint = points.find((point) => point.dateFrom.toISOString() === startDate.toISOString());
   const lastPoint = points.find((point) => point.dateTo.toISOString() === endDate.toISOString());
@@ -32,10 +31,8 @@ function createTripInfoTemplate(points, destinations, offers) {
   }
 
   function getDataTemplate() {
-    return points.length === 1 ?
-      `<p class="trip-info__dates">${dayjs(startDate).format(DateFormat.HEADER_DAY_MONTH)}</p>` :
-      `<p class="trip-info__dates">
-              ${isMonthTheSame ? dayjs(startDate).format(DateFormat.HEADER_ONLY_DAY) : dayjs(startDate).format(DateFormat.HEADER_DAY_MONTH)}
+    return `<p class="trip-info__dates">
+              ${dayjs(startDate).format(DateFormat.HEADER_DAY_MONTH)}
               &nbsp; &mdash; &nbsp; ${dayjs(endDate).format(DateFormat.HEADER_DAY_MONTH)}</p>`;
   }
 

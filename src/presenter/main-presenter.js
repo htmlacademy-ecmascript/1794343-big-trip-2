@@ -2,8 +2,6 @@ import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import EventListView from '../view/event-list-view.js';
 import SortingView from '../view/soritng-view.js';
 import EmptyListView from '../view/empty-list-view.js';
-import LoadingView from '../view/loading-view.js';
-import FailedLoadDataView from '../view/failed-load-data.js';
 import { render, remove, RenderPosition} from '../framework/render.js';
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presener.js';
@@ -15,9 +13,6 @@ export default class MainPresenter {
   #container = null;
   #eventModel = null;
   #filterModel = null;
-
-  #loadingComponent = new LoadingView();
-  #failedLoadDataComponent = new FailedLoadDataView();
   #sortingComponent = null;
   #eventListComponent = new EventListView();
   #noEventsComponent = null;
@@ -26,6 +21,7 @@ export default class MainPresenter {
   #currentSortType = SortingType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
+  #isDataLoadingError = false;
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT
@@ -136,15 +132,16 @@ export default class MainPresenter {
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
-        remove(this.#loadingComponent);
+        remove(this.#noEventsComponent);
         this.#renderEventListItems();
         break;
       case UpdateType.ERROR:
         this.#isLoading = false;
-        remove(this.#loadingComponent);
+        this.#isDataLoadingError = true;
+        remove(this.#noEventsComponent);
         remove(this.#sortingComponent);
         this.#clearEventList();
-        this.#renderFailedLoadDataMessage();
+        this.renderEmptyList();
         break;
     }
   };
@@ -177,9 +174,9 @@ export default class MainPresenter {
   }
 
   #renderEventListItems () {
-    remove(this.#failedLoadDataComponent);
+    remove(this.#noEventsComponent);
     if (this.#isLoading) {
-      this.#renderLoading();
+      this.renderEmptyList();
       return;
     }
 
@@ -205,7 +202,6 @@ export default class MainPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
     remove(this.#sortingComponent);
-    remove(this.#loadingComponent);
 
     if (resetSortType) {
       this.#currentSortType = SortingType.DAY;
@@ -216,17 +212,12 @@ export default class MainPresenter {
     }
   }
 
-  #renderLoading() {
-    render(this.#loadingComponent, this.#container);
-  }
-
-  #renderFailedLoadDataMessage() {
-    render(this.#failedLoadDataComponent, this.#container);
-  }
 
   renderEmptyList () {
     this.#noEventsComponent = new EmptyListView({
-      filterType: this.#filterType
+      filterType: this.#filterType,
+      isDataLoadingError: this.#isDataLoadingError,
+      isLoading: this.#isLoading
     });
     remove(this.#sortingComponent);
     remove(this.#eventListComponent);

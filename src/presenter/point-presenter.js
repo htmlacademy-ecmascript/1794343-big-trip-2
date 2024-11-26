@@ -45,7 +45,7 @@ export default class PointPresenter {
       offers: this.#offers,
       onRolldownBtnClick: this.#handleRolldownBtnClick,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
+      onDeleteClick: this.#handleDeleteClick,
     });
 
     if (prevPointComponent === null || prevFormEditComponent === null) {
@@ -73,13 +73,8 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
-      this.#resetForm();
+      this.#replaceFormToEvent();
     }
-  }
-
-  #resetForm() {
-    this.#formEditComponent.reset();
-    this.#replaceFormToEvent();
   }
 
   setSaving() {
@@ -106,11 +101,13 @@ export default class PointPresenter {
       return;
     }
     const resetFormState = () => {
-      this.#formEditComponent.updateElement({
-        isDisabled: false,
-        isSaving: false,
-        isDeleting: false,
-      });
+      if (this.#mode === Mode.EDITING) {
+        this.#formEditComponent.updateElement({
+          isDisabled: false,
+          isSaving: false,
+          isDeleting: false,
+        });
+      }
     };
     this.#formEditComponent.shake(resetFormState);
   }
@@ -132,7 +129,7 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#resetForm();
+      this.#replaceFormToEvent();
     }
   };
 
@@ -141,7 +138,9 @@ export default class PointPresenter {
   };
 
   #handleRolldownBtnClick = () => {
-    this.#replaceFormToEvent();
+    if (this.#mode === Mode.EDITING) {
+      this.#replaceFormToEvent();
+    }
   };
 
   #handleFavoriteClick = () => {
