@@ -11,7 +11,7 @@ export default class PointPresenter {
   #pointComponent = null;
   #formEditComponent = null;
 
-  #point = [];
+  #points = [];
   #destinations = [];
   #offers = [];
   #mode = Mode.DEFAULT;
@@ -22,8 +22,8 @@ export default class PointPresenter {
     this.#handleModeChange = onModeChange;
   }
 
-  init(point, destinations, offers) {
-    this.#point = point;
+  init(points, destinations, offers) {
+    this.#points = points;
     this.#destinations = destinations;
     this.#offers = offers;
 
@@ -32,7 +32,7 @@ export default class PointPresenter {
 
 
     this.#pointComponent = new WayPointView({
-      point: this.#point,
+      point: this.#points,
       destinations: this.#destinations,
       offers: this.#offers,
       onRollupBtnClick: this.#handleRollupBtnClick,
@@ -40,7 +40,7 @@ export default class PointPresenter {
     });
 
     this.#formEditComponent = new FormEditView({
-      point: this.#point,
+      point: this.#points,
       destinations: this.#destinations,
       offers: this.#offers,
       onRolldownBtnClick: this.#handleRolldownBtnClick,
@@ -121,7 +121,7 @@ export default class PointPresenter {
 
   #replaceFormToEvent() {
     this.#formEditComponent.updateElement({
-      ...this.#point,
+      ...this.#points,
       isDisabled: false,
       isSaving: false,
       isDeleting: false,
@@ -152,7 +152,7 @@ export default class PointPresenter {
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
-      {...this.#point, isFavorite: !this.#point.isFavorite},
+      {...this.#points, isFavorite: !this.#points.isFavorite},
     );
   };
 
