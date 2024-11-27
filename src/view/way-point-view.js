@@ -83,7 +83,7 @@ const createWayPointTemplate = (point, destinations, offers) => (
             </li>`
 );
 export default class WayPointView extends AbstractView {
-  #point = [];
+  #points = [];
   #destinations = [];
   #offers = [];
   #handleRollupBtnClick = null;
@@ -91,7 +91,7 @@ export default class WayPointView extends AbstractView {
 
   constructor({point, destinations, offers, onRollupBtnClick, onFavoriteClick}) {
     super();
-    this.#point = point;
+    this.#points = point;
     this.#destinations = destinations;
     this.#offers = offers;
     this.#handleRollupBtnClick = onRollupBtnClick;
@@ -103,7 +103,7 @@ export default class WayPointView extends AbstractView {
   }
 
   get template() {
-    return createWayPointTemplate(this.#point, this.#destinations, this.#offers);
+    return createWayPointTemplate(this.#points, this.#destinations, this.#offers);
   }
 
   #rollupBtnClickHandler = () => {
